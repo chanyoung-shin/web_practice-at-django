@@ -8,18 +8,6 @@ https://drive.google.com/file/d/1p0GZTfjaLX204CJcR64Sfdo_YRLNgrET/view?usp=shari
 내가 맡은 역할은 로그인 시스템 개선이다. 기존 로그인 시스템은 직접 비밀번호를 쳐야해서 번거롭고 비밀번호 유출 보안 문제도 있다. 그러나 이 로그인 시스템을 사용하면 앞선 두가지 문제를 완화할 수 있다.
 
 ## How is the structure structured?
-1.먼저 사용자의 웹캠을 이용하여 사용자의 얼굴 이미지가 서버로 들어온다
-
-2.이후 sejong web project
-
-https://drive.google.com/file/d/1p0GZTfjaLX204CJcR64Sfdo_YRLNgrET/view?usp=sharing
-이링크는 2024 1학기에 진행하였던 세종 웹사이트 개선 프로젝트 파일이다. 
-
-세종대에서 온라인으로 학습할 때 이용하는 집현캠퍼스라는 사이트를 개선하는 프로젝트였다. 개선점은 크게 4가지로 로그인 시스템 개선, 웹 디자인 개선, 강의 요약 시스템 추가, 과제, 강의등 마감시간 알림 개선이다.
-
-내가 맡은 역할은 로그인 시스템 개선이다. 기존 로그인 시스템은 직접 비밀번호를 쳐야해서 번거롭고 비밀번호 유출 보안 문제도 있다. 그러나 이 로그인 시스템을 사용하면 앞선 두가지 문제를 완화할 수 있다.
-
-## How is the structure structured?
 1.먼저 사용자의 웹캠을 이용하여 사용자의 얼굴 이미지와 사용자의 id가 서버로 들어온다
 
 2.이후 YOLO를 이용해 보안위협(device,프린터된 사진)이 있는지 검출하고 만약 보안위협이 감지되지않고 사람의 얼굴만 감지 된다면 사람의 얼굴을 crop하여 Siamese Network 모델로 보낸다.
