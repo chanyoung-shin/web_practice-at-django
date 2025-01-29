@@ -136,7 +136,6 @@ Django uses the **MTV (Model–Template–View)** pattern:
 
 ---
 
-# korean.ver
 ## Core Structure
 
 Below are some crucial Django files from the project:
@@ -165,7 +164,7 @@ Below are some crucial Django files from the project:
 - If the server’s response is “Done,” redirects the user to the logged-in page.  
 - Otherwise, displays messages such as “Face not recognized” or “Security threat detected.”
 
-
+# korean.ver
 # sejong web project
 
 https://drive.google.com/file/d/1p0GZTfjaLX204CJcR64Sfdo_YRLNgrET/view?usp=sharing
