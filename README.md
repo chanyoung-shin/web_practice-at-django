@@ -1,3 +1,171 @@
+# english.ver
+# Sejong Web Project
+
+[**Google Drive Link**](https://drive.google.com/file/d/1p0GZTfjaLX204CJcR64Sfdo_YRLNgrET/view?usp=sharing)  
+This link leads to a file for the **Sejong University Website Improvement Project** from the first semester of 2024.
+
+**Context**: The project aimed to enhance the **Jiphyeon Campus** website (used for online coursework at Sejong University). The improvements focused on four main areas:  
+1. **Login system**  
+2. **Web design**  
+3. **Lecture summarization system**  
+4. **Assignment & lecture deadline reminders**  
+
+My role primarily involved **improving the login system**, which was previously reliant on manual password entry—both inconvenient and vulnerable to security risks.
+
+---
+
+## How Is the Structure Organized?
+
+1. **Webcam Input**  
+   The user’s webcam captures an image of their face, which is sent to the server along with their user ID.
+
+2. **YOLO Detection**  
+   - The YOLO model checks for security threats (e.g., electronic devices, printer photos, etc.).  
+   - If it detects no threats and only a human face is present, it crops the face area for further processing.  
+   - If any security threat is detected, the process terminates with a “Security threat detected” message.
+
+3. **Siamese Network**  
+   - The user ID determines which Siamese Network model to use (or which reference data to compare against).  
+   - The cropped face image is fed into the Siamese Network.
+
+4. **Model Decision**  
+   - If the Siamese Network confirms the user (face match), login is granted.  
+   - Otherwise, the process repeats (unless YOLO detects a threat).
+
+---
+
+## YOLOv8
+
+**YOLO** serves two purposes:
+1. **Identify Security Threats** (e.g., other devices, printed photos, masks, tablets, etc.).
+2. **Crop Only the Face** to provide the Siamese Network with a clean input, thereby improving accuracy.
+
+I used **YOLOv8** from Ultralytics, trained on a custom dataset from **Roboflow** (which currently isn’t publicly accessible due to dataset removal by the owner).
+
+![image](https://github.com/user-attachments/assets/1475a0b6-f253-45ce-9c91-3114aa36891e)
+
+Ultralytics provides a user-friendly interface for training YOLOv8 models with minimal effort.
+
+---
+
+## Siamese Network
+
+A **Siamese Network** consists of two identical neural networks (with shared weights and structure) that each process one input; their outputs are then compared. Initially described in 2005 by Yann LeCun’s team, it was further refined in 2015 into a neural-based Siamese model.
+
+### One-Shot Learning
+
+A key concept in understanding Siamese Networks is **One-shot learning**, a form of **few-shot learning**.  
+- Traditional deep learning requires large amounts of data due to the numerous parameters.  
+- Humans, by contrast, can often recognize something new from minimal examples.  
+- One-shot learning aims to replicate human-like learning from a single example.
+
+![image](https://github.com/user-attachments/assets/a8a8b0a1-d8e9-442c-a01c-ef80c57657b7)  
+> Source: [Velog Post on Siamese Networks](https://velog.io/@jy_/Siamese-Network)
+
+In the above diagram, two images are passed through the same network, and the outputs are compared to compute a similarity score. If the **Euclidean distance** between the embeddings is sufficiently small, the images are deemed similar.
+
+### Applying Siamese Network to User Authentication
+
+- A Siamese Network receives two images:
+  1. **Reference image** (stored as the user’s registered face)  
+  2. **Incoming webcam image**  
+- The network outputs a **distance**; the smaller the distance, the more similar the two faces are.  
+- If the distance is below a chosen **threshold**, we accept the login as valid.  
+
+To **minimize false positives**, we used the validation distribution of distances so that the threshold is set near the point where **FP (false positives) ≈ 0**. Consequently, the model is highly cautious in verifying the user’s identity.
+
+![image](https://github.com/user-attachments/assets/03fd4c99-cf6e-4b82-b885-6f0a0e14fc0a)  
+The black vertical line in the distribution acts as our threshold.
+
+---
+
+### Training Process
+
+We used:
+- **My own face images** (anchor folder).  
+- **Subset of the LFW (Labelled Faces in the Wild)** dataset (contains multiple celebrities).  
+
+1. **Data Preparation**  
+   - Because a Siamese Network learns by comparing two images at a time, the number of images in each folder (my face vs. LFW) must be balanced.  
+   - If needed, we duplicate paths in the smaller set until both sets are equal in size.
+
+2. **Data Loading & Preprocessing**  
+   - Convert images to resolution **120×120**.  
+   - Apply standard transformations (e.g., normalization, tensor conversion).  
+   - Batch the data via **DataLoader** (e.g., batch size of 32).
+
+3. **Loss Function**  
+   - A contrastive loss or similar metric-based loss is often used to train the Siamese Network.
+
+4. **Model Architecture**  
+   - We combined **MobileNet** with Siamese principles.  
+   - Performed **transfer learning**, freezing most layers of MobileNet and training only the final layers.
+
+![image](https://github.com/user-attachments/assets/acf32733-6346-4e2e-974e-8e56b6446af7)
+
+After training, the model successfully differentiates between my face and others with high accuracy.
+
+---
+
+## Django
+
+**Django** is a Python-based web framework designed for rapid, secure development. Two key reasons developers favor Django:
+
+1. **Fast Development**  
+   - Simple setup and straightforward learning curve.  
+   - Provides a practical structure for common web development tasks.
+
+2. **Security**  
+   - Django defends against **XSS** by escaping user input in templates.  
+   - Protects against **CSRF** attacks by encrypting session tokens.
+
+### How Django Works (MTV Pattern)
+
+Django uses the **MTV (Model–Template–View)** pattern:
+- **Model (M)**: Manages database interactions.  
+- **Template (T)**: Renders dynamic HTML for the user.  
+- **View (V)**: Core application logic.  
+
+![image](https://github.com/user-attachments/assets/17572fab-9059-41d3-a1d6-cffb0945f58f)
+
+**Basic Flow**:
+1. A user requests a URL → **urls.py** routes to the appropriate app-level urls.py.  
+2. The app’s urls.py points to a **view function**.  
+3. The view can return a response directly or may need to query/update the database via **models**.  
+4. The final data is rendered into **templates** (HTML) and sent to the user.
+
+---
+
+# korean.ver
+## Core Structure
+
+Below are some crucial Django files from the project:
+
+### 1. HTML (Template)
+
+![image](https://github.com/user-attachments/assets/98d0c2ad-75a4-44c7-97e9-1eae249f6d15)
+
+- Captures the user’s webcam input.  
+- Sends the captured image to the server.
+
+### 2. Views (Server Logic)
+
+![image](https://github.com/user-attachments/assets/b8f18d92-6c03-463e-bc8f-3a3fac552815)
+
+- Receives the image from the client.  
+- Runs YOLO to detect devices or other threats:
+  - If a threat is detected, returns “detect device” and stops.  
+  - Otherwise, crops the face and sends it to the **Siamese Network**.  
+  - If the Siamese Network confirms the user, returns “Done”; otherwise, it returns a prompt to retry.
+
+### 3. HTML Response Handling
+
+![image](https://github.com/user-attachments/assets/98d0c2ad-75a4-44c7-97e9-1eae249f6d15)
+
+- If the server’s response is “Done,” redirects the user to the logged-in page.  
+- Otherwise, displays messages such as “Face not recognized” or “Security threat detected.”
+
+
 # sejong web project
 
 https://drive.google.com/file/d/1p0GZTfjaLX204CJcR64Sfdo_YRLNgrET/view?usp=sharing
