@@ -73,9 +73,8 @@ In the above diagram, two images are passed through the same network, and the ou
 - If the distance is below a chosen **threshold**, we accept the login as valid.  
 
 To **minimize false positives**, we used the validation distribution of distances so that the threshold is set near the point where **FP (false positives) ≈ 0**. Consequently, the model is highly cautious in verifying the user’s identity.
-
-![image](https://github.com/user-attachments/assets/03fd4c99-cf6e-4b82-b885-6f0a0e14fc0a)  
-The black vertical line in the distribution acts as our threshold.
+![output](https://github.com/user-attachments/assets/d695978b-a120-4f59-b574-acaa28eb586c)
+The red vertical line in the distribution acts as our threshold.
 
 ---
 
