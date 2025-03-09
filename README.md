@@ -74,7 +74,7 @@ In the above diagram, two images are passed through the same network, and the ou
 
 To **minimize false positives**, we used the validation distribution of distances so that the threshold is set near the point where **FP (false positives) ≈ 0**. Consequently, the model is highly cautious in verifying the user’s identity.
 ![output](https://github.com/user-attachments/assets/d695978b-a120-4f59-b574-acaa28eb586c)
-The red vertical line in the distribution acts as our threshold.
+This graph is just an example to help understand how to set threshold with KDE graphs.
 
 ---
 
